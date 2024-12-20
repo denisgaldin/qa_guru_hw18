@@ -34,9 +34,17 @@ def test_login_with_api():
         browser.element(".account").should(have.text(LOGIN))
 
     with step("Добавляем товар в корзину"):
-        requests.post(url="https://demowebshop.tricentis.com/addproducttocart/catalog/31/1/1")
+        requests.post(url="https://demowebshop.tricentis.com/addproducttocart/details/72/1")
         browser.driver.add_cookie({"name": "NOPCOMMERCE.AUTH", "value": cookie})
 
     with step("Проверяем что товар добавлен в корзину"):
         browser.open("https://demowebshop.tricentis.com/cart")
         browser.element(".product-name").should(have.text("Build your own computer"))
+
+
+def test_cart_no_authorization():
+    with step("Добавляем товар в корзину"):
+        response = requests.post(url="https://demowebshop.tricentis.com/addproducttocart/catalog/31/1/1")
+
+    with step('Проверяем что товар добавлен в корзину'):
+        assert response.status_code == 200
